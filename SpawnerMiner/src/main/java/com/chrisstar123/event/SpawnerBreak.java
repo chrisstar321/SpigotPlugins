@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Map;
 import java.util.logging.Logger;
@@ -36,7 +37,6 @@ public class SpawnerBreak implements Listener {
         //The spawner was mined with a silk touch pick
         CreatureSpawner spawner = (CreatureSpawner) block.getState();
         ItemStack spawnerItem = new ItemStack(Material.SPAWNER, 1);
-        spawnerItem.getItemMeta().setDisplayName(spawner.getSpawnedType().name() + " spawner");
 
         NBTTagCompound spawnerData = new NBTTagCompound();
 
@@ -47,8 +47,15 @@ public class SpawnerBreak implements Listener {
         net.minecraft.server.v1_13_R2.ItemStack nmsItem = CraftItemStack.asNMSCopy(spawnerItem);
         nmsItem.setTag(spawnerData);
 
+        ItemStack newSpawnerItem = CraftItemStack.asBukkitCopy(nmsItem);
+        ItemMeta meta = newSpawnerItem.getItemMeta();
+        String name = spawner.getSpawnedType().name() + " spawner";
+        Logger.getGlobal().info("setting spawner name to \"" + name + "\"");
+        meta.setDisplayName(name);
+        newSpawnerItem.setItemMeta(meta);
+
         //Drop spawner item
-        block.getLocation().getWorld().dropItem(block.getLocation(), CraftItemStack.asBukkitCopy(nmsItem));
+        block.getLocation().getWorld().dropItem(block.getLocation(), newSpawnerItem);
     }
 
 }
