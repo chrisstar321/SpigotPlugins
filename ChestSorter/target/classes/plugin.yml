@@ -1,0 +1,9 @@
+name: ChestSorter
+version: 1.0
+author: chrisstar123
+main: com.chrisstar123.chestsorter.ChestSorter
+api-version: 1.13
+commands:
+  SortChest:
+    Description: Sorts the chest you're looking at.
+    usage: /sortchest while looking at a chest
