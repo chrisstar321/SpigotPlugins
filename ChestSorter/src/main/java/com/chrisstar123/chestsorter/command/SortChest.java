@@ -3,10 +3,12 @@ package com.chrisstar123.chestsorter.command;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -15,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class SortChest implements CommandExecutor {
 
@@ -36,8 +39,14 @@ public class SortChest implements CommandExecutor {
 
         //Get chest contents
         Chest chest = (Chest) target.getState();
-        Inventory chestInv = chest.getBlockInventory();
-        ItemStack[] items = chestInv.getContents();
+        Inventory chestInv = chest.getInventory();
+        ItemStack[] items;
+        if (chestInv instanceof DoubleChestInventory) {
+            Logger.getGlobal().info("Double chest");
+            items = ((DoubleChestInventory) chestInv).getHolder().getInventory().getContents();
+        } else {
+            items = chestInv.getContents();
+        }
 
         //Filter out null itemstacks
         List<ItemStack> itemsList = new ArrayList<>(Arrays.asList(items));
@@ -50,7 +59,20 @@ public class SortChest implements CommandExecutor {
         //Sort items and put back in chest
         sortItems(items);
         items = removeAir(items);
-        chestInv.setContents(items);
+
+        if (chestInv instanceof DoubleChestInventory) {
+            //Split list in parts no longer than 27
+            ItemStack[] chestA = Arrays.copyOfRange(items, 0, 27);
+            ItemStack[] chestB = items.length > 26 ? Arrays.copyOfRange(items, 27, 54) : new ItemStack[]{};
+
+            DoubleChestInventory dChest = (DoubleChestInventory) chestInv;
+            dChest.getLeftSide().setContents(chestA);
+            dChest.getRightSide().setContents(chestB);
+        } else {
+            //just set the contents
+            chestInv.setContents(items);
+        }
+
 
         return true;
     }
