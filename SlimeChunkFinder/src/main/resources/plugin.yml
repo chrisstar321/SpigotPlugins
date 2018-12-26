@@ -1,0 +1,12 @@
+name: SlimeChunkFinder
+version: 1.01
+author: chrisstar123
+main: com.chrisstar123.slimechunkfinder.SlimeChunkFinder
+api-version: 1.13
+commands:
+  BuySlimeChunkFinder:
+    description: Buy slime chunk finders
+    usage: /buyslimechunkfinder
+  BuySlimeChunkFinders:
+    description: Buy slime chunk finders
+    usage: /buyslimechunkfinders <amount>
