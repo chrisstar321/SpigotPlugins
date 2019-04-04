@@ -1,0 +1,10 @@
+name: XpBottler
+version: ${project.version}
+main: me.chrisstar123.XpBottler
+authors: [Chrisstar123]
+description: A xp bottler plugin
+api-version: 1.13
+commands:
+  xpbottle:
+    description: bottles some xp.
+    usage: /xpbottle <amount of xp> or /xpbottle <amount of levels>L
