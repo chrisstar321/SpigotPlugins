@@ -8,10 +8,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.util.Vector;
-
-import java.util.logging.Logger;
 
 public class PlayerCrouchListener implements Listener {
 
@@ -36,8 +35,8 @@ public class PlayerCrouchListener implements Listener {
                 Location newLocation = loc.add(0, dY, 0);
                 if (w.getBlockAt(newLocation).getType().equals(elevatorMat) && checkForAirBlocks(newLocation.clone())) {
                     //Teleport the player
-                    e.setCancelled(true);
-                    e.getPlayer().teleport(newLocation.add(new Vector(0, 1, 0)));
+                    e.getPlayer().teleport(newLocation.add(new Vector(0, 1, 0)),
+                                           PlayerTeleportEvent.TeleportCause.PLUGIN);
                     return;
                 }
             }

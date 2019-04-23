@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
 import java.util.logging.Logger;
@@ -24,7 +25,8 @@ public class PlayerJumpListener implements Listener {
             if (elevatorMat == null) elevatorMat = Elevators.BACKUP_ELEVATOR_MATERIAL;
 
             World w = e.getFrom().getWorld();
-            if (w.getBlockAt(e.getFrom().add(new Vector(0, -1, 0))).getType().equals(elevatorMat)) {
+            Location l = e.getFrom();
+            if (w.getBlockAt(l.getBlockX(), l.getBlockY() - 1, l.getBlockZ()).getType().equals(elevatorMat)) {
                 //Find an elevator above the current position and teleport the player there
                 int dY = 1;
                 while (dY + e.getFrom().getBlockY() < 256) {
@@ -35,7 +37,8 @@ public class PlayerJumpListener implements Listener {
                     if (w.getBlockAt(newLocation).getType().equals(elevatorMat) && checkForAirBlocks(newLocation.clone())) {
                         //Teleport the player
                         e.setCancelled(true);
-                        e.getPlayer().teleport(newLocation.add(new Vector(0, 1, 0)));
+                        e.getPlayer().teleport(newLocation.add(new Vector(0, 1, 0)),
+                                               PlayerTeleportEvent.TeleportCause.PLUGIN);
                         return;
                     }
                 }
