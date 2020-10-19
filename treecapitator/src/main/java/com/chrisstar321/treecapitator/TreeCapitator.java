@@ -13,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 public class TreeCapitator extends JavaPlugin {
 
@@ -32,36 +33,17 @@ public class TreeCapitator extends JavaPlugin {
     }
 
     public static void Treecap(Block block, Player player, ItemStack axe) {
-        Set<Block> treeBlocks = new HashSet<Block>();
+        Stack<Block> treeBlocks = new Stack<Block>();
         treeBlocks.add(block);
         Material check = block.getType();
-
-        boolean floodFill = true;
-        while (floodFill) {
-            floodFill = false;
-            Set<Block> toAdd = new HashSet<Block>();
-            toAdd.addAll(treeBlocks);
-
-            for (Block b : treeBlocks) {
-                for (int x = -1; x <= 1; x++) {
-                    for (int y = -1; y <= 1; y++) {
-                        for (int z = -1; z <= 1; z++) {
-                            Block toCheck = b.getRelative(x, y, z);
-                            if (toCheck.getType().equals(check)) {
-                                if (toAdd.add(toCheck)) floodFill = true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            treeBlocks.addAll(toAdd);
-        }
 
         ItemMeta axeMeta = axe.getItemMeta();
         Damageable axeDamageable = (Damageable) axeMeta;
         boolean axeBroken = false;
-        for (Block b : treeBlocks) {
+
+        while (!treeBlocks.empty()) {
+            Block b = treeBlocks.pop();
+
             b.breakNaturally(axe);
 
             axeDamageable.setDamage(axeDamageable.getDamage() + 1);
@@ -70,7 +52,19 @@ public class TreeCapitator extends JavaPlugin {
                 axeBroken = true;
                 break;
             }
+
+            for (int y = -1; y <= 1; y++) {
+                for (int z = -1; z <= 1; z++) {
+                    for (int x = -1; x <= 1; x++) {
+                        Block toCheck = b.getRelative(x, y, z);
+                        if (toCheck.getType().equals(check)) {
+                            treeBlocks.push(toCheck);
+                        }
+                    }
+                }
+            }
         }
+
         if (!axeBroken) axe.setItemMeta((ItemMeta) axeDamageable);
         player.updateInventory();
     }
