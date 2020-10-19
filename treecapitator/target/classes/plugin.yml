@@ -1,0 +1,5 @@
+name: TreeCapitator
+version: 1.0
+author: Chrisstar321
+main: com.chrisstar321.treecapitator.TreeCapitator
+api-version: 1.16

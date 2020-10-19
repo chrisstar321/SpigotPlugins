@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="maven-antrun-" default="main">
+  <target name="main">
+    <copy file="C:\Users\Chris\Documents\Ellirion\treecapitator\target/treecapitator-1.0.jar" todir="C:\Users\Chris\Documents\Ellirion\Server\1.16.3/plugins" />
+  </target>
+</project>
